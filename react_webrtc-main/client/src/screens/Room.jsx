@@ -75,6 +75,8 @@ const RoomPage = () => {
   );
 
   const handleNegoNeedFinal = useCallback(async ({ ans }) => {
+    console.log(ans);
+    
     await peer.setLocalDescription(ans);
   }, []);
 

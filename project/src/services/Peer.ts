@@ -14,6 +14,7 @@ class PeerService {
     });
   }
 
+
   async getAnswer(offer: RTCSessionDescriptionInit): Promise<RTCSessionDescriptionInit> {
     await this.peer.setRemoteDescription(offer);
     const answer = await this.peer.createAnswer();
@@ -22,7 +23,13 @@ class PeerService {
   }
 
   async setLocalDescription(desc: RTCSessionDescriptionInit): Promise<void> {
-    await this.peer.setLocalDescription(desc);
+
+    if (this.peer.signalingState === 'stable') {
+      // If it is stable, set the local description
+      await this.peer.setLocalDescription(desc);
+    } else {
+      throw new Error("Cannot set local description while signaling state is not stable.");
+    }
   }
 
   async getOffer(): Promise<RTCSessionDescriptionInit> {

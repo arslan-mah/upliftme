@@ -31,7 +31,7 @@ const socketidToEmailMap = new Map();
     
       socket.on("call:accepted", ({ to, ans }) => {
         io.to(to).emit("call:accepted", { from: socket.id, ans });
-        console.log("From", socket.id);
+      
         
       });
     

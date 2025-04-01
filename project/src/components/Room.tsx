@@ -65,20 +65,48 @@ const RoomPage: React.FC = () => {
 
   const sendStreams = useCallback(() => {
     if (myStream) {
+      const existingSenders = peer.peer.getSenders();
+  
       for (const track of myStream.getTracks()) {
-        peer.peer.addTrack(track, myStream);
+        // Check if the track is already added
+        const isTrackAlreadyAdded = existingSenders.some(
+          (sender) => sender.track === track
+        );
+  
+        if (!isTrackAlreadyAdded) {
+          peer.peer.addTrack(track, myStream);
+          console.log("Track added:", track);
+        } else {
+          console.log("Track already added:", track);
+        }
       }
     }
-  }, [myStream]); 
+  }, [myStream]);
 
   const handleCallAccepted = useCallback(
-    ({ from, ans }: CallAccepted) => {     
-        console.log(from);
-          console.log(ans);
-          
-       peer.setLocalDescription(ans);
-      console.log("Call Accepted!", ans);
-      sendStreams();
+    async ({ from, ans }: CallAccepted) => {
+      try {
+        console.log("Call accepted from:", from);
+        console.log("Answer SDP:", ans);
+  
+        // Check if the signaling state is valid for setting the remote answer
+        if (peer.peer.signalingState !== "have-local-offer") {
+          console.warn(
+            "Cannot set remote answer. Current signaling state:",
+            peer.peer.signalingState
+          );
+          return;
+        }
+  
+        // Set the remote description (answer)
+        await peer.setLocalDescription(ans);
+        console.log("Call Accepted! Local description set:", ans);
+  
+        // Send local media streams
+        sendStreams();
+      } catch (error) {
+        console.error("Error in handleCallAccepted:", error);
+      }
     },
     [sendStreams]
   );
@@ -104,6 +132,8 @@ const RoomPage: React.FC = () => {
   );
 
   const handleNegoNeedFinal = useCallback(async ({ ans }: { ans: RTCSessionDescriptionInit }) => {
+    console.log(ans);
+    
     await peer.setLocalDescription(ans);
   }, []);
 

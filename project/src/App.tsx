@@ -30,11 +30,13 @@ const App: React.FC = () => {
           <WelcomeScreen onComplete={() => setIsOnboarded(true)} />
         ) : (
           <>
+
             <Routes>
               <Route path="/" element={<LobbyScreen />} />
               <Route path="/room/:roomId" element={<RoomPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
+            <Dashboard />
           </>
         )}
         <button
