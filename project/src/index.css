@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    @apply antialiased;
+  }
+  
+  .dark {
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500;
+  }
+}
+
+@keyframes reaction {
+  0% {
+    transform: translate(-50%, 0) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -100px) scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -200px) scale(1);
+    opacity: 0;
+  }
+}
+
+.reaction-animation {
+  position: absolute;
+  left: 50%;
+  bottom: 100px;
+  font-size: 2rem;
+  pointer-events: none;
+  animation: reaction 2s ease-out forwards;
+  z-index: 50;
+}
+
+/* Video session styles */
+.daily-video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.daily-video-local {
+  position: absolute !important;
+  right: 1rem;
+  bottom: 1rem;
+  width: 25% !important;
+  height: auto !important;
+  aspect-ratio: 16/9;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 10;
+  transform: scaleX(-1); /* Mirror local video */
+}
+
+.daily-video-remote {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+/* Video controls */
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  z-index: 20;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.video-controls:not(:hover) {
+  opacity: 0.5;
+}
+
+.video-container:hover .video-controls {
+  opacity: 1;
+}
